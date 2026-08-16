@@ -1,0 +1,28 @@
+# ---- flight data (far too large for git; supplied by the course) -----------
+data/raw/*.mp4
+data/raw/*.srt
+data/frames/
+
+# ---- results not yet regenerated under the corrected protocol --------------
+# See "Known limitations" in RESULTS.md. Run ./reproduce.sh to produce them.
+results/flight_0017/
+results/flight_0023/
+results/_ablation/
+
+# ---- long-form draft notes, superseded by README.md + RESULTS.md -----------
+# Kept locally, not published. Delete this line to include it.
+EXPLANATION.txt
+
+# ---- python ----------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# ---- editors / OS ----------------------------------------------------------
+.DS_Store
+.idea/
+.vscode/
+.claude/

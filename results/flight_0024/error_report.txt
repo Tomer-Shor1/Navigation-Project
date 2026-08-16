@@ -1,0 +1,40 @@
+GPS-denied localization -- error report
+========================================
+Test frames total:       27
+Trusted map fixes:       26
+Dead-reckoned (coasted): 1
+No estimate at all:      0
+
+Error (m) vs true GPS, by mode:
+  map fixes (26):     median 10.54  mean 20.02  rmse 30.66  p90 57.98  max 80.28
+  dead-reckon (1):    median 39.43  mean 39.43  rmse 39.43  p90 39.43  max 39.43
+  all reported (27):  median 11.96  mean 20.74  rmse 31.03  p90 55.99  max 80.28
+
+Per-frame detail:
+  frame_00006.jpg t=5.00s MAP  [gate] good=19 inliers=7 ratio=0.37 error=6.12m matched_ref=frame_00138.jpg
+  frame_00011.jpg t=10.00s MAP  [gate] good=1081 inliers=1064 ratio=0.98 error=0.14m matched_ref=frame_00013.jpg
+  frame_00016.jpg t=15.00s MAP  [gate] good=226 inliers=184 ratio=0.81 error=0.50m matched_ref=frame_00020.jpg
+  frame_00021.jpg t=20.00s MAP  [gate] good=975 inliers=927 ratio=0.95 error=0.04m matched_ref=frame_00023.jpg
+  frame_00026.jpg t=25.00s MAP  [gate] good=590 inliers=547 ratio=0.93 error=16.56m matched_ref=frame_00028.jpg
+  frame_00031.jpg t=30.00s MAP  [gate] good=1304 inliers=1284 ratio=0.98 error=0.23m matched_ref=frame_00033.jpg
+  frame_00036.jpg t=35.00s MAP  [gate] good=116 inliers=47 ratio=0.41 error=9.11m matched_ref=frame_00029.jpg
+  frame_00041.jpg t=40.00s MAP  [gate] good=30 inliers=21 ratio=0.70 error=48.02m matched_ref=frame_00043.jpg
+  frame_00046.jpg t=45.00s MAP  [gate] good=88 inliers=43 ratio=0.49 error=7.27m matched_ref=frame_00044.jpg
+  frame_00051.jpg t=50.00s MAP  [gate] good=38 inliers=16 ratio=0.42 error=67.93m matched_ref=frame_00138.jpg
+  frame_00056.jpg t=55.00s MAP  [gate] good=30 inliers=15 ratio=0.50 error=8.50m matched_ref=frame_00054.jpg
+  frame_00061.jpg t=60.00s MAP  [gate] good=47 inliers=21 ratio=0.45 error=6.11m matched_ref=frame_00059.jpg
+  frame_00066.jpg t=65.00s MAP  [gate] good=21 inliers=6 ratio=0.29 error=41.81m matched_ref=frame_00064.jpg
+  frame_00071.jpg t=70.00s MAP  [gate] good=15 inliers=7 ratio=0.47 error=80.28m matched_ref=frame_00094.jpg
+  frame_00076.jpg t=75.00s MAP  [gate] good=19 inliers=6 ratio=0.32 error=13.03m matched_ref=frame_00080.jpg
+  frame_00081.jpg t=80.00s DR   [coast #1] error=39.43m (insufficient geometric match confidence)
+  frame_00086.jpg t=85.00s MAP  [gate] good=24 inliers=8 ratio=0.33 error=19.23m matched_ref=frame_00084.jpg
+  frame_00091.jpg t=90.00s MAP  [gate] good=23 inliers=10 ratio=0.43 error=31.67m matched_ref=frame_00074.jpg
+  frame_00096.jpg t=95.00s MAP  [gate] good=15 inliers=6 ratio=0.40 error=22.18m matched_ref=frame_00094.jpg
+  frame_00101.jpg t=100.00s MAP  [gate] good=671 inliers=605 ratio=0.90 error=11.96m matched_ref=frame_00103.jpg
+  frame_00106.jpg t=105.00s MAP  [gate] good=110 inliers=105 ratio=0.95 error=76.53m matched_ref=frame_00109.jpg
+  frame_00111.jpg t=110.00s MAP  [gate] good=655 inliers=646 ratio=0.99 error=15.80m matched_ref=frame_00109.jpg
+  frame_00116.jpg t=115.00s MAP  [gate] good=194 inliers=112 ratio=0.58 error=6.14m matched_ref=frame_00114.jpg
+  frame_00121.jpg t=120.00s MAP  [gate] good=39 inliers=15 ratio=0.38 error=4.93m matched_ref=frame_00123.jpg
+  frame_00126.jpg t=125.00s MAP  [gate] good=303 inliers=237 ratio=0.78 error=6.79m matched_ref=frame_00128.jpg
+  frame_00131.jpg t=130.00s MAP  [gate] good=29 inliers=17 ratio=0.59 error=19.51m matched_ref=frame_00124.jpg
+  frame_00136.jpg t=135.00s MAP  [gate] good=692 inliers=524 ratio=0.76 error=0.24m matched_ref=frame_00134.jpg
