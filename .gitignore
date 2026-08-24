@@ -3,6 +3,11 @@ data/raw/*.mp4
 data/raw/*.srt
 data/frames/
 
+# ---- downloaded satellite basemaps -----------------------------------------
+# Large, and the imagery belongs to whichever provider it came from. Regenerate
+# with tools/fetch_basemap.py.
+data/basemap/
+
 # ---- results not yet regenerated under the corrected protocol --------------
 # See "Known limitations" in RESULTS.md. Run ./reproduce.sh to produce them.
 results/flight_0017/

@@ -71,5 +71,45 @@ run_ablation "chronological tail split, modelled geometry (original MVP)" \
     --split tail --no-calibrate --exclusion-sec 0
 rm -rf results/_ablation
 
+# ---- final project: raster (GIS-style) map vs the flight-frame map ---------
+echo
+echo "=============================================================="
+echo " Final project: north-up raster map (--map-source ortho)"
+echo "=============================================================="
+for stem in $(flights); do
+  flags=$(frame_flags "$stem")
+  [ -z "$flags" ] && [ ! -f "data/raw/$stem.mp4" ] && continue
+  echo; echo "--- $stem ---"
+  $PY run_pipeline.py --video "data/raw/$stem.mp4" --srt "data/raw/$stem.srt" $flags \
+      --map-source ortho --results-dir "results/${stem}_ortho" \
+      --save-basemap "results/${stem}_ortho/orthomosaic.jpg"
+done
+
+# With a real satellite basemap present, run GIS-only and the hybrid map too.
+# Fetch one first with:  python tools/fetch_basemap.py --flight data/raw/<stem>.srt --source google
+for stem in $(flights); do
+  if [ -f "data/basemap/$stem.jpg" ]; then
+    echo; echo "--- $stem vs satellite basemap ---"
+    $PY run_pipeline.py --video "data/raw/$stem.mp4" --srt "data/raw/$stem.srt" $(frame_flags "$stem") \
+        --map-source gis --basemap "data/basemap/$stem.jpg" --results-dir "results/${stem}_gis"
+    echo; echo "--- $stem, previous video AND satellite (hybrid) ---"
+    $PY run_pipeline.py --video "data/raw/$stem.mp4" --srt "data/raw/$stem.srt" $(frame_flags "$stem") \
+        --map-source hybrid --basemap "data/basemap/$stem.jpg" --results-dir "results/${stem}_hybrid"
+  fi
+done
+
+# ---- real-time timing ------------------------------------------------------
+echo
+echo "=============================================================="
+echo " Real-time budget"
+echo "=============================================================="
+RT=$(flights | head -1)
+$PY tools/benchmark.py --video "data/raw/$RT.mp4" --srt "data/raw/$RT.srt" $(frame_flags "$RT")
+if [ -f "data/basemap/$RT.jpg" ]; then
+  echo
+  $PY tools/benchmark.py --video "data/raw/$RT.mp4" --srt "data/raw/$RT.srt" $(frame_flags "$RT") \
+      --map-source hybrid --basemap "data/basemap/$RT.jpg"
+fi
+
 echo
 $PY summarize.py

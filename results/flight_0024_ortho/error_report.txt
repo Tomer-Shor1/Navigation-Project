@@ -1,0 +1,40 @@
+GPS-denied localization -- error report
+========================================
+Test frames total:       27
+Trusted map fixes:       10
+Dead-reckoned (coasted): 17
+No estimate at all:      0
+
+Error (m) vs true GPS, by mode:
+  map fixes (10):     median 8.12  mean 9.92  rmse 11.84  p90 21.81  max 21.94
+  dead-reckon (17):    median 42.09  mean 90.05  rmse 143.81  p90 292.88  max 294.59
+  all reported (27):  median 11.38  mean 60.37  rmse 114.34  p90 253.39  max 294.59
+
+Per-frame detail:
+  frame_00006.jpg t=5.00s DR   [coast #1] error=0.19m (insufficient geometric match confidence)
+  frame_00011.jpg t=10.00s DR   [coast #2] error=0.28m (insufficient geometric match confidence)
+  frame_00016.jpg t=15.00s DR   [coast #3] error=0.39m (insufficient geometric match confidence)
+  frame_00021.jpg t=20.00s DR   [coast #4] error=0.30m (insufficient geometric match confidence)
+  frame_00026.jpg t=25.00s DR   [coast #5] error=0.22m (insufficient geometric match confidence)
+  frame_00031.jpg t=30.00s DR   [coast #6] error=0.30m (insufficient geometric match confidence)
+  frame_00036.jpg t=35.00s MAP  [gate] good=43 inliers=26 ratio=0.60 error=4.50m matched_ref=patch_r2304_c1280
+  frame_00041.jpg t=40.00s MAP  [gate] good=28 inliers=17 ratio=0.61 error=21.79m matched_ref=patch_r2816_c1280
+  frame_00046.jpg t=45.00s MAP  [gate] good=93 inliers=66 ratio=0.71 error=3.06m matched_ref=patch_r2304_c768
+  frame_00051.jpg t=50.00s MAP  [gate] good=47 inliers=16 ratio=0.34 error=6.65m matched_ref=patch_r2048_c768
+  frame_00056.jpg t=55.00s DR   [coast #1] error=43.61m (insufficient geometric match confidence)
+  frame_00061.jpg t=60.00s MAP  [gate] good=61 inliers=48 ratio=0.79 error=9.64m matched_ref=patch_r1280_c256
+  frame_00066.jpg t=65.00s MAP  [gate] good=22 inliers=10 ratio=0.45 error=11.38m matched_ref=patch_r1024_c1024
+  frame_00071.jpg t=70.00s DR   [coast #1] error=42.09m (insufficient geometric match confidence)
+  frame_00076.jpg t=75.00s MAP  [gate] good=26 inliers=12 ratio=0.46 error=9.59m matched_ref=patch_r512_c1792
+  frame_00081.jpg t=80.00s MAP  [gate] good=38 inliers=19 ratio=0.50 error=21.94m matched_ref=patch_r512_c2304
+  frame_00086.jpg t=85.00s DR   [coast #1] error=93.60m (insufficient geometric match confidence)
+  frame_00091.jpg t=90.00s DR   [coast #2] error=159.59m (insufficient geometric match confidence)
+  frame_00096.jpg t=95.00s DR   [coast #3] error=227.78m (insufficient geometric match confidence)
+  frame_00101.jpg t=100.00s DR   [coast #4] error=291.81m (insufficient geometric match confidence)
+  frame_00106.jpg t=105.00s DR   [coast #5] error=294.49m (insufficient geometric match confidence)
+  frame_00111.jpg t=110.00s DR   [coast #6] error=294.59m (insufficient geometric match confidence)
+  frame_00116.jpg t=115.00s MAP  [gate] good=24 inliers=12 ratio=0.50 error=5.97m matched_ref=patch_r1792_c768
+  frame_00121.jpg t=120.00s DR   [coast #1] error=52.04m (insufficient geometric match confidence)
+  frame_00126.jpg t=125.00s MAP  [gate] good=22 inliers=10 ratio=0.45 error=4.67m matched_ref=patch_r2048_c1280
+  frame_00131.jpg t=130.00s DR   [coast #1] error=14.74m (insufficient geometric match confidence)
+  frame_00136.jpg t=135.00s DR   [coast #2] error=14.78m (insufficient geometric match confidence)

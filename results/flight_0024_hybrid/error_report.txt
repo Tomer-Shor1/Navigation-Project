@@ -1,0 +1,44 @@
+GPS-denied localization -- error report
+========================================
+Test frames total:       27
+Trusted map fixes:       18
+Dead-reckoned (coasted): 9
+No estimate at all:      0
+
+Error (m) vs true GPS, by mode:
+  map fixes (18):     median 7.30  mean 25.84  rmse 81.58  p90 17.43  max 344.00
+  dead-reckon (9):    median 124.50  mean 137.19  rmse 167.63  p90 258.88  max 296.00
+  all reported (27):  median 10.37  mean 62.96  rmse 117.49  p90 220.03  max 344.00
+
+Which map produced each fix:
+  previous flight video     16 fixes (  89%)  median 6.83  mean 7.11  rmse 9.37  p90 16.60  max 18.44
+  GIS / satellite raster     2 fixes (  11%)  median 175.65  mean 175.65  rmse 243.30  p90 310.33  max 344.00
+
+Per-frame detail:
+  frame_00006.jpg t=5.00s DR   [coast #1] error=0.15m (insufficient geometric match confidence)
+  frame_00011.jpg t=10.00s MAP  [gate] good=1081 inliers=1024 ratio=0.95 error=0.08m matched_ref=frame_00013.jpg src=flight_frame
+  frame_00016.jpg t=15.00s MAP  [gate] good=226 inliers=165 ratio=0.73 error=1.75m matched_ref=frame_00020.jpg src=flight_frame
+  frame_00021.jpg t=20.00s MAP  [gate] good=975 inliers=926 ratio=0.95 error=0.06m matched_ref=frame_00023.jpg src=flight_frame
+  frame_00026.jpg t=25.00s MAP  [gate] good=590 inliers=549 ratio=0.93 error=17.00m matched_ref=frame_00028.jpg src=flight_frame
+  frame_00031.jpg t=30.00s MAP  [gate] good=1304 inliers=1284 ratio=0.98 error=0.23m matched_ref=frame_00033.jpg src=flight_frame
+  frame_00036.jpg t=35.00s MAP  [gate] good=119 inliers=46 ratio=0.39 error=10.37m matched_ref=frame_00028.jpg src=flight_frame
+  frame_00041.jpg t=40.00s DR   [coast #1] error=54.82m (insufficient geometric match confidence)
+  frame_00046.jpg t=45.00s MAP  [gate] good=88 inliers=43 ratio=0.49 error=7.55m matched_ref=frame_00044.jpg src=flight_frame
+  frame_00051.jpg t=50.00s DR   [coast #1] error=56.89m (insufficient geometric match confidence)
+  frame_00056.jpg t=55.00s MAP  [gate] good=30 inliers=15 ratio=0.50 error=8.22m matched_ref=frame_00054.jpg src=flight_frame
+  frame_00061.jpg t=60.00s MAP  [gate] good=47 inliers=24 ratio=0.51 error=2.74m matched_ref=frame_00059.jpg src=flight_frame
+  frame_00066.jpg t=65.00s DR   [coast #1] error=58.20m (insufficient geometric match confidence)
+  frame_00071.jpg t=70.00s DR   [coast #2] error=124.50m (insufficient geometric match confidence)
+  frame_00076.jpg t=75.00s DR   [coast #3] error=194.24m (insufficient geometric match confidence)
+  frame_00081.jpg t=80.00s MAP  [gate] good=20 inliers=6 ratio=0.30 error=344.00m matched_ref=patch_r3584_c1792 src=gis_tile
+  frame_00086.jpg t=85.00s DR   [coast #1] error=296.00m (insufficient geometric match confidence)
+  frame_00091.jpg t=90.00s DR   [coast #2] error=249.60m (insufficient geometric match confidence)
+  frame_00096.jpg t=95.00s DR   [coast #3] error=200.31m (insufficient geometric match confidence)
+  frame_00101.jpg t=100.00s MAP  [gate] good=671 inliers=587 ratio=0.87 error=12.35m matched_ref=frame_00103.jpg src=flight_frame
+  frame_00106.jpg t=105.00s MAP  [gate] good=15 inliers=6 ratio=0.40 error=7.29m matched_ref=patch_r2304_c1280 src=gis_tile
+  frame_00111.jpg t=110.00s MAP  [gate] good=655 inliers=642 ratio=0.98 error=16.20m matched_ref=frame_00109.jpg src=flight_frame
+  frame_00116.jpg t=115.00s MAP  [gate] good=194 inliers=97 ratio=0.50 error=6.34m matched_ref=frame_00114.jpg src=flight_frame
+  frame_00121.jpg t=120.00s MAP  [gate] good=39 inliers=14 ratio=0.36 error=4.93m matched_ref=frame_00123.jpg src=flight_frame
+  frame_00126.jpg t=125.00s MAP  [gate] good=303 inliers=216 ratio=0.71 error=7.31m matched_ref=frame_00128.jpg src=flight_frame
+  frame_00131.jpg t=130.00s MAP  [gate] good=26 inliers=18 ratio=0.69 error=18.44m matched_ref=frame_00123.jpg src=flight_frame
+  frame_00136.jpg t=135.00s MAP  [gate] good=692 inliers=547 ratio=0.79 error=0.24m matched_ref=frame_00134.jpg src=flight_frame

@@ -11,10 +11,12 @@ access as `query(lat, lon, radius)` means:
 * matching cost stays bounded by the local neighborhood, not the whole map,
   which is what makes it real-time as the map grows.
 
-`InMemoryReferenceSource` is the concrete implementation used today. A
-`TiledMapReferenceSource` (load georeferenced tiles from disk/network within the
-radius, cache by tile id, drop far ones) would implement the same two methods
-and nothing downstream would change.
+`InMemoryReferenceSource` is the concrete implementation used today.
+`CompositeReferenceSource` puts several maps behind that one query, which is how
+the final project uses a satellite basemap *and* previously-flown video at the
+same time. A `TiledMapReferenceSource` (load georeferenced tiles from
+disk/network within the radius, cache by tile id, drop far ones) would implement
+the same two methods and nothing downstream would change.
 """
 
 from __future__ import annotations
@@ -54,6 +56,40 @@ class InMemoryReferenceSource:
 
     def all(self) -> list[ReferenceEntry]:
         return self._entries
+
+
+class CompositeReferenceSource:
+    """Several maps answering one radius query -- the project brief's "and".
+
+    A satellite basemap and a previously-flown video are complementary, not
+    alternatives. The raster covers everything, including ground this drone has
+    never flown, and its scale and heading are exact. The flight frames cover
+    only the old corridor, but where they exist they are the *same camera on the
+    same scene*, so they match far more strongly than cross-sensor satellite
+    imagery does.
+
+    Merging them here rather than choosing between them upstream means the
+    localizer needs no new logic: it already verifies every candidate by RANSAC
+    inliers and keeps the best, so it simply picks whichever map explains this
+    frame better -- per frame, not per flight. `ReferenceEntry.source` records
+    which one won, so the split can be reported afterwards.
+    """
+
+    def __init__(self, sources: list):
+        assert sources, "Sanity check failed: a composite needs at least one source."
+        self._sources = [as_reference_source(s) for s in sources]
+
+    def query(self, latitude: float, longitude: float, radius_m: float) -> list[ReferenceEntry]:
+        found: list[ReferenceEntry] = []
+        for source in self._sources:
+            found.extend(source.query(latitude, longitude, radius_m))
+        return found
+
+    def all(self) -> list[ReferenceEntry]:
+        every: list[ReferenceEntry] = []
+        for source in self._sources:
+            every.extend(source.all())
+        return every
 
 
 def as_reference_source(reference: object) -> ReferenceSource:

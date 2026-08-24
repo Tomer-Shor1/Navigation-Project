@@ -1,0 +1,36 @@
+GPS-denied localization -- error report
+========================================
+Test frames total:       23
+Trusted map fixes:       1
+Dead-reckoned (coasted): 22
+No estimate at all:      0
+
+Error (m) vs true GPS, by mode:
+  map fixes (1):     median 218.09  mean 218.09  rmse 218.09  p90 218.09  max 218.09
+  dead-reckon (22):    median 260.37  mean 226.90  rmse 242.46  p90 289.89  max 291.88
+  all reported (23):  median 255.98  mean 226.52  rmse 241.45  p90 289.86  max 291.88
+
+Per-frame detail:
+  frame_00006.jpg t=5.00s DR   [coast #1] error=0.53m (insufficient geometric match confidence)
+  frame_00011.jpg t=10.00s DR   [coast #2] error=37.54m (insufficient geometric match confidence)
+  frame_00016.jpg t=15.00s DR   [coast #3] error=88.61m (insufficient geometric match confidence)
+  frame_00021.jpg t=20.00s DR   [coast #4] error=128.07m (insufficient geometric match confidence)
+  frame_00026.jpg t=25.00s DR   [coast #5] error=162.36m (insufficient geometric match confidence)
+  frame_00031.jpg t=30.00s DR   [coast #6] error=204.84m (insufficient geometric match confidence)
+  frame_00036.jpg t=35.00s DR   [coast #7] error=254.78m (insufficient geometric match confidence)
+  frame_00041.jpg t=40.00s MAP  [gate] good=18 inliers=6 ratio=0.33 error=218.09m matched_ref=patch_r3072_c3072
+  frame_00046.jpg t=45.00s DR   [coast #1] error=264.77m (insufficient geometric match confidence)
+  frame_00051.jpg t=50.00s DR   [coast #2] error=290.29m (insufficient geometric match confidence)
+  frame_00056.jpg t=55.00s DR   [coast #3] error=289.91m (insufficient geometric match confidence)
+  frame_00061.jpg t=60.00s DR   [coast #4] error=289.67m (insufficient geometric match confidence)
+  frame_00066.jpg t=65.00s DR   [coast #5] error=291.88m (insufficient geometric match confidence)
+  frame_00071.jpg t=70.00s DR   [coast #6] error=288.76m (insufficient geometric match confidence)
+  frame_00076.jpg t=75.00s DR   [coast #7] error=288.55m (insufficient geometric match confidence)
+  frame_00081.jpg t=80.00s DR   [coast #8] error=282.17m (insufficient geometric match confidence)
+  frame_00086.jpg t=85.00s DR   [coast #9] error=281.95m (insufficient geometric match confidence)
+  frame_00091.jpg t=90.00s DR   [coast #10] error=284.97m (insufficient geometric match confidence)
+  frame_00096.jpg t=95.00s DR   [coast #11] error=277.17m (insufficient geometric match confidence)
+  frame_00101.jpg t=100.00s DR   [coast #12] error=255.98m (insufficient geometric match confidence)
+  frame_00106.jpg t=105.00s DR   [coast #13] error=254.22m (insufficient geometric match confidence)
+  frame_00111.jpg t=110.00s DR   [coast #14] error=246.17m (insufficient geometric match confidence)
+  frame_00116.jpg t=115.00s DR   [coast #15] error=228.74m (insufficient geometric match confidence)

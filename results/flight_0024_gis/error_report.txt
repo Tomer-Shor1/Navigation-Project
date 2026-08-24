@@ -1,0 +1,40 @@
+GPS-denied localization -- error report
+========================================
+Test frames total:       27
+Trusted map fixes:       3
+Dead-reckoned (coasted): 24
+No estimate at all:      0
+
+Error (m) vs true GPS, by mode:
+  map fixes (3):     median 313.29  mean 320.58  rmse 321.03  p90 337.86  max 344.00
+  dead-reckon (24):    median 148.54  mean 154.05  rmse 203.33  p90 351.33  max 372.71
+  all reported (27):  median 176.56  mean 172.55  rmse 219.54  p90 349.91  max 372.71
+
+Per-frame detail:
+  frame_00006.jpg t=5.00s DR   [coast #1] error=0.19m (insufficient geometric match confidence)
+  frame_00011.jpg t=10.00s DR   [coast #2] error=0.28m (insufficient geometric match confidence)
+  frame_00016.jpg t=15.00s DR   [coast #3] error=0.39m (insufficient geometric match confidence)
+  frame_00021.jpg t=20.00s DR   [coast #4] error=0.30m (insufficient geometric match confidence)
+  frame_00026.jpg t=25.00s DR   [coast #5] error=0.22m (insufficient geometric match confidence)
+  frame_00031.jpg t=30.00s DR   [coast #6] error=0.30m (insufficient geometric match confidence)
+  frame_00036.jpg t=35.00s DR   [coast #7] error=12.35m (insufficient geometric match confidence)
+  frame_00041.jpg t=40.00s DR   [coast #8] error=56.10m (insufficient geometric match confidence)
+  frame_00046.jpg t=45.00s MAP  [gate] good=17 inliers=6 ratio=0.35 error=304.44m matched_ref=patch_r3328_c3584 src=gis_tile
+  frame_00051.jpg t=50.00s MAP  [gate] good=16 inliers=6 ratio=0.38 error=313.29m matched_ref=patch_r3584_c3328 src=gis_tile
+  frame_00056.jpg t=55.00s DR   [coast #1] error=353.73m (insufficient geometric match confidence)
+  frame_00061.jpg t=60.00s DR   [coast #2] error=372.71m (insufficient geometric match confidence)
+  frame_00066.jpg t=65.00s DR   [coast #3] error=352.75m (insufficient geometric match confidence)
+  frame_00071.jpg t=70.00s DR   [coast #4] error=346.80m (insufficient geometric match confidence)
+  frame_00076.jpg t=75.00s DR   [coast #5] error=348.01m (insufficient geometric match confidence)
+  frame_00081.jpg t=80.00s MAP  [gate] good=20 inliers=6 ratio=0.30 error=344.00m matched_ref=patch_r3584_c1792 src=gis_tile
+  frame_00086.jpg t=85.00s DR   [coast #1] error=301.69m (insufficient geometric match confidence)
+  frame_00091.jpg t=90.00s DR   [coast #2] error=253.15m (insufficient geometric match confidence)
+  frame_00096.jpg t=95.00s DR   [coast #3] error=201.12m (insufficient geometric match confidence)
+  frame_00101.jpg t=100.00s DR   [coast #4] error=177.32m (insufficient geometric match confidence)
+  frame_00106.jpg t=105.00s DR   [coast #5] error=176.56m (insufficient geometric match confidence)
+  frame_00111.jpg t=110.00s DR   [coast #6] error=176.72m (insufficient geometric match confidence)
+  frame_00116.jpg t=115.00s DR   [coast #7] error=174.16m (insufficient geometric match confidence)
+  frame_00121.jpg t=120.00s DR   [coast #8] error=122.92m (insufficient geometric match confidence)
+  frame_00126.jpg t=125.00s DR   [coast #9] error=93.87m (insufficient geometric match confidence)
+  frame_00131.jpg t=130.00s DR   [coast #10] error=87.84m (insufficient geometric match confidence)
+  frame_00136.jpg t=135.00s DR   [coast #11] error=87.62m (insufficient geometric match confidence)

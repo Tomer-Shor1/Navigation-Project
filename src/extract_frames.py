@@ -10,11 +10,17 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
+import time
 from dataclasses import dataclass
 from typing import Optional
 
 from .geo import approx_distance_m, bearing_deg
 from .parse_srt import TelemetryRecord, parse_srt
+
+
+class FrameExtractionCancelled(Exception):
+    """Raised when a caller asks to stop an in-progress extraction."""
 
 
 @dataclass
@@ -60,6 +66,7 @@ def extract_frames(
     output_dir: str,
     rate_hz: float = 1.0,
     max_seconds: Optional[float] = None,
+    cancel_event=None,
 ) -> list[tuple[str, float]]:
     """Extract frames from `video_path` at `rate_hz` frames/sec into `output_dir`.
 
@@ -67,6 +74,11 @@ def extract_frames(
     output from ffmpeg's fps filter (n-th output frame ~= n / rate_hz seconds).
     If `max_seconds` is set, only that much of the video (from the start) is
     processed -- used for quick stub/sanity runs on placeholder clips.
+
+    `cancel_event` is an optional `threading.Event`: when it is set, ffmpeg is
+    stopped and `FrameExtractionCancelled` is raised. Decoding a long flight can
+    take minutes, so the interactive app needs a way out that is not "wait, or
+    kill the whole application".
     """
     _check_ffmpeg_available()
 
@@ -91,9 +103,22 @@ def extract_frames(
         os.path.join(output_dir, "frame_%05d.jpg"),
     ]
 
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"ffmpeg frame extraction failed:\n{result.stderr[-2000:]}")
+    # stderr goes to a file rather than a pipe: ffmpeg is chatty, and a pipe that
+    # nobody drains while we poll for cancellation would fill up and deadlock.
+    with tempfile.TemporaryFile(mode="w+", errors="replace") as errors:
+        process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=errors, text=True)
+        while process.poll() is None:
+            if cancel_event is not None and cancel_event.is_set():
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                raise FrameExtractionCancelled(f"frame extraction of '{video_path}' was cancelled")
+            time.sleep(0.05)
+        if process.returncode != 0:
+            errors.seek(0)
+            raise RuntimeError(f"ffmpeg frame extraction failed:\n{errors.read()[-2000:]}")
 
     frame_files = sorted(f for f in os.listdir(output_dir) if f.startswith("frame_") and f.endswith(".jpg"))
     if not frame_files:

@@ -212,6 +212,10 @@ no inertial data. Two things were tested:
 
 ## How to run
 
+**Just want to see it work?** `./run.sh` sets everything up and opens the
+interactive navigator — see "Watching it run" below. The rest of this section is
+the batch pipeline that produces the measured results.
+
 ```bash
 git clone <this-repo>
 cd visual-nav-mvp
@@ -243,8 +247,159 @@ Useful flags (see `python run_pipeline.py --help`):
 - `--max-seconds` — only process the first N seconds (useful for a quick smoke test on a placeholder clip)
 - `--video` / `--srt` — override the default `data/raw/flight.mp4` / `data/raw/flight.srt` paths
 
+The same flags drive `nav_player.py` (see "Watching it run" below), which steps
+through this pipeline interactively.
+
 If `data/raw/flight.mp4` / `data/raw/flight.srt` are missing, the script prints
 a clear error telling you where to place them instead of crashing.
+
+## Watching it run
+
+`run_pipeline.py` navigates a whole flight and writes a report. To *watch* the
+same navigation happen, frame by frame:
+
+```bash
+./run.sh
+```
+
+That is the entire setup. It creates the virtualenv on first use, installs the
+requirements, and opens an entry window listing every flight video it finds under
+`data/` — with a **Browse** button for any other video on your computer. Pick one,
+press **Start**, and it decodes the flight, builds the map and opens the player.
+
+![the player](results/nav_player.png)
+
+### Nothing is precomputed, and nothing is kept
+
+The app never reads `data/frames/` and never writes to it. When you press Start it
+extracts frames into a temporary folder (`src/workspace.py`), uses them, and
+deletes them the moment you open another flight or close the window. That costs
+about a minute of ffmpeg per flight and buys two things worth more: it opens *any*
+video you point it at, and it can never quietly show you a stale run that some
+earlier session left behind. **Cancel** during preparation stops ffmpeg and cleans
+up immediately.
+
+Any video works, so long as its telemetry sits beside it: `FLIGHT.MP4` needs
+`FLIGHT.SRT` in the same folder (the match is case-insensitive). If the entry
+window shows *"— none found —"*, use **Choose telemetry…** to point at the right
+file. `.mp4`, `.mov`, `.mkv`, `.avi`, `.m4v`, `.webm` and friends are all offered.
+
+Before you start, the window tells you what you are in for — *"≈ 117 frames to
+extract, ≈ 23 of them navigated against a map of ≈ 94"* — and you can lower the
+sample rate or clip the flight to its first N seconds if that is more than you
+want to sit through.
+
+### What the panels show
+
+| panel | what it shows |
+|---|---|
+| **Current frame** | the image the matcher is working on, every ORB keypoint it found, and the subset that survived RANSAC as inliers |
+| **Best-matching map view** | the reference frame (or map tile) it chose, with this frame's footprint projected onto it through the homography. That gold outline *is* the localization — its centre is the estimated position |
+| **Route** | the true GPS track and the trajectory built so far, drawn as it goes: red = trusted visual fix, orange = dead-reckoned, dashed circle = the motion model's search gate |
+| **Error** | metres from ground truth per frame, filling in as it runs |
+
+Beside the figure, a table lists every map view the frame was actually compared
+against — good matches, inliers, and if it lost, *why* (degenerate homography,
+centre projected off the view, or simply below the acceptance bar). Clicking a
+row explains it. That table is the difference between showing the answer and
+showing the reasoning.
+
+Controls: play/pause, step, jump to either end, a frame scrubber, a playback-rate
+box, toggles for keypoints / match lines / follow-the-drone, **Open another
+flight** to go back to the entry window, and **▶ Live flight** (below). From the
+keyboard: `space` play/pause, `←`/`→` step, `shift+←/→` jump five, `Home`/`End`.
+
+### Live flight
+
+The frame-by-frame player is for studying one decision. **▶ Live flight** shows
+the other half: the real video playing at the speed it was flown, with the route
+drawing itself as the navigator works.
+
+**Nothing is computed before it is due.** A frame is localized only once playback
+actually reaches its moment in the flight, and the fix appears on the route when
+the computation finishes — so what you watch is the true latency between the drone
+being somewhere and the navigator knowing it. (Running the work ahead and
+replaying it on a timer would look identical and prove nothing, which is why it
+does not do that.)
+
+The status bar reports that latency against the time available, and says plainly
+whether it is keeping up. Measured: ~240 ms per fix against a 5 s frame spacing at
+1x, so there is a lot of slack — and raising the speed eats it. On the hybrid map
+at 8x the navigator has 625 ms per frame, needs 746 ms, and the readout switches
+to **FALLING BEHIND** with the lag in seconds rather than hiding it.
+
+Playback speed is selectable (0.5x–4x), the video carries a banner saying whether
+the current position is a visual fix, a dead-reckoned coast or a **GIS fallback**,
+and the route and error chart colour each position by how it was obtained.
+**Restart** rewinds the navigator too, so a second run re-does the work rather
+than replaying the first run's answers.
+
+It needs the source video, so it is offered whenever the flight was opened from a
+real `.mp4` (which the entry window always does).
+
+Stepping forward past what has been navigated runs the real algorithm right
+then — roughly a quarter-second per frame — so play really is the navigator
+working, not a recording. Frames already visited are cached in memory, so
+scrubbing backwards is immediate.
+
+### Straight to a flight, and the ablation flags
+
+Naming a flight on the command line skips the entry window, which is what you
+want for a demo — and it is the only way to reach the options the window does not
+expose:
+
+```bash
+python nav_player.py --video data/raw/flight.mp4 --srt data/raw/flight.srt
+python nav_player.py --video data/raw/flight.mp4 --srt data/raw/flight.srt \
+    --map-source ortho --no-motion
+```
+
+It accepts every flag `run_pipeline.py` accepts — both share `add_pipeline_args`
+in `src/session.py` — so `--map-source`, `--split`, `--no-motion` and the rest
+mean exactly the same thing here, which makes it an ablation viewer as well as a
+demo. Frames still go to a temporary folder unless you pass `--frames-dir` or
+`--use-cached-frames`; the latter is the one way to make it reuse `data/frames/`,
+and then it is on you that those frames match the video.
+
+### Checking it on your own videos
+
+```bash
+python tools/check_flights.py            # first 45 s of every flight under data/
+python tools/check_flights.py --full     # every flight, end to end
+```
+
+This drives the **real** window for every video it finds and every map source that
+video can offer: select it, press Start, wait for preprocessing, step through the
+player, switch to live playback, and return to the chooser — checking the scratch
+directory is erased each time. It is what catches the things a unit test cannot,
+like a map source that only fails on one flight.
+
+It distinguishes three outcomes. `ok` means the flight ran. `declined` means the
+app refused with a reason and stayed usable — for example, an orthomosaic map
+needs self-calibration, and a clip that is short or mostly hover does not give
+enough moving frame pairs to calibrate from; you get that explanation rather than
+a traceback. Anything else is a real `FAILED`.
+
+### It shows what the report measures
+
+Nothing in the player re-implements the algorithm. `src/trace.py` drives
+`localize_stream` — the same generator `localize_all` collects — and records the
+`debug` dict `localize_frame` fills in, so what you watch is by construction what
+the report measured. `python tools/check_player.py --use-cached-frames` proves it
+rather than asserting it: headless, it runs the batch pipeline and the traced one
+over the same session and checks they agree frame for frame.
+
+### How the code is laid out
+
+| file | role |
+|---|---|
+| `nav_player.py` | entry point: open the window, or go straight to a named flight |
+| `ui/launcher.py` | the entry window, the preparation screen, and the app that switches between them |
+| `ui/player.py` | the player window — four panels and the transport controls |
+| `ui/live.py` | live playback — real video at flight speed, route building as it runs |
+| `src/trace.py` | a seekable, lazily-computed record of what the navigator did per frame |
+| `src/workspace.py` | the temporary directory, erased however the run ends |
+| `src/session.py` | preprocessing and the CLI flags, shared with `run_pipeline.py` |
 
 ## Results
 
@@ -393,8 +548,8 @@ letting the measurement, not the intuition, decide.
 ## Real-time navigation loop
 
 The localizer is structured as an online predict → gate → match → correct loop
-(`localize_all` in `src/localize.py`), which is exactly the shape a real-time
-navigator needs:
+(`localize_stream` in `src/localize.py`, which `localize_all` collects), which is
+exactly the shape a real-time navigator needs:
 
 1. **Predict** the next position from the motion model (constant velocity,
    dead-reckoned from the last fix — this alone works during short visual
@@ -413,6 +568,63 @@ the real GPS-denied case. The current bottleneck for true real-time is the
 brute-force ORB matcher; a spatial index over the reference set (e.g. a k-d tree
 on positions, already half-enabled by the radius query) plus a
 BoW/vocabulary-tree or FAISS descriptor index is the natural next step.
+
+## Real-time, measured
+
+`tools/benchmark.py` reports whether the navigator fits the frame budget, where
+the time goes, and how the cost scales:
+
+```bash
+python tools/benchmark.py --use-cached-frames
+python tools/benchmark.py --use-cached-frames --map-source hybrid --basemap data/basemap/flight.jpg
+```
+
+At 1 Hz the budget is 1000 ms per frame. Measured: **272 ms** median against the
+94-frame flight map (3.7x faster than real time) and **558 ms** against the
+346-view hybrid map (1.8x). Descriptor matching is 77–81% of that, and it is
+linear in the number of views the motion gate admits — about **5–7 ms per view**,
+flat across gate sizes. So the per-frame cost is set by the size of the
+*neighbourhood searched*, not the size of the map, which is exactly what gating
+buys and what makes a city-scale basemap tractable. Breaking that linearity with
+a descriptor index is the next optimisation.
+
+## Using a GIS map, and using both at once
+
+```bash
+# fetch a satellite basemap for a flight (needs internet)
+python tools/fetch_basemap.py --flight data/raw/flight.srt --source google
+
+# navigate against it
+python run_pipeline.py --use-cached-frames --map-source gis  --basemap data/basemap/flight.jpg
+
+# or against the previous flight AND the satellite map, competing per frame
+python run_pipeline.py --use-cached-frames --map-source hybrid --basemap data/basemap/flight.jpg
+```
+
+`--map-source hybrid` puts both maps behind one `CompositeReferenceSource`, so a
+single radius query returns flight frames and satellite tiles together. By
+default it runs them as **tiers**: trust the previous flight's video, and consult
+the GIS raster only for frames the video could not explain. That is the
+operationally useful arrangement — same-sensor imagery is far more reliable over
+ground you have flown, so the satellite map is the safety net for the gaps rather
+than a competitor. (`--hybrid-policy compete` matches both every frame and keeps
+whichever gathered more inliers.)
+
+The error report breaks fixes down by which map produced them, and the player
+says so on screen: a fix taken from the satellite map turns the map-view panel
+purple, titles it **GIS FALLBACK**, shows the actual satellite tile the position
+was measured from, and marks the estimate purple on the route and error charts.
+
+To see it, open `flight_0024` as a hybrid and go to test frame **20** — the
+previous-flight map fails there and the satellite map produces a **7.3 m** fix.
+Frame **15** is the honest counterpart: the satellite also wins there, and is
+344 m wrong.
+
+The measured answer on these flights is that the satellite map wins **nothing**:
+ORB, SIFT and AKAZE all fail to match an oblique drone frame to nadir satellite
+imagery even when handed the correct patch by a GPS oracle. That negative result,
+and the evidence for it, is in `RESULTS.md` — it is the main finding of the final
+project, and it is what points at a learned matcher as the next step.
 
 ## Extending to GIS / Google Earth (final-project seam)
 

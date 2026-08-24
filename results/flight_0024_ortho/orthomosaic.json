@@ -1,0 +1,8 @@
+{
+  "min_lat": 32.100996022250214,
+  "min_lon": 35.20751267008695,
+  "max_lat": 32.10592257115228,
+  "max_lon": 35.21244221040045,
+  "source": "flight_orthomosaic",
+  "gsd_m_per_px": 0.15
+}
