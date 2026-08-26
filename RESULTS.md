@@ -51,8 +51,7 @@ the camera sees too little ground to match anything, and coasting through those
 gaps drifts badly. `results/<flight>/trajectory_comparison.png` overlays the
 estimates on the true track; `error_report.txt` has the per-frame detail. To step
 through the run that produced them frame by frame — what the matcher saw, which
-map view it chose and why — run `./run.sh`, pick a flight and press Start (see
-README, "Watching it run").
+map view it chose and why — run `./run.sh`, pick a flight and press Start.
 
 ## What changed, and why it mattered
 
